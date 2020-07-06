@@ -1,11 +1,15 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
+	"log"
+	"net/http"
 	"os"
 	"os/signal"
 	"path"
+	"strconv"
 	"strings"
 	"syscall"
 
@@ -60,8 +64,43 @@ func main() {
 	redisc.InitRedis()
 
 	go cron.SendMails()
-
+	http.HandleFunc("/", indexHandler)
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8082"
+		log.Printf("Defaulting to port %s", port)
+	}
+	log.Printf("Listening on port %s", port)
+	log.Printf("Open http://localhost:%s in the browser", port)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
 	ending()
+
+}
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path == "/" {
+		_, err := fmt.Fprint(w, "Hello, World!`````````	")
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+		}
+	}
+	if r.URL.Path == "/api/alarm" {
+		res,err:=redisc.FindMessage()
+		b,err:=json.Marshal(res)
+		if err != nil {
+			fmt.Println("失败")
+		}
+		w.Header().Set("Content-Type","application/json; charset=utf-8")
+		w.Header().Set("Content-Length", strconv.Itoa(len(b)))
+		w.Write(b)
+
+	}else {
+		http.NotFound(w, r)
+		return
+	}
+
+
+
+
 }
 
 func ending() {

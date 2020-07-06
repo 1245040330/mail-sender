@@ -22,7 +22,7 @@ consumer:
 smtp:
   host: "smtp.163.com"
   port: 25
-  user: "ulric@163.com"
-  pass: "******"
+  user: "fengjie124work@163.com"
+  pass: "IJKHJKDXFKHANZQR"
   insecureSkipVerify: true
 

@@ -1,4 +1,4 @@
-# mail-sender
+# [mail-sender](https://github.com/n9e/mail-sender) 在n9e.mail-sender 基础上进行二开
 
 Nightingale的理念，是将告警事件扔到redis里就不管了，接下来由各种sender来读取redis里的事件并发送，毕竟发送报警的方式太多了，适配起来比较费劲，希望社区同仁能够共建。
 

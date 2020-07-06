@@ -81,7 +81,7 @@ func sendMail(message *dataobj.Message) {
 	m.SetBody("text/html", content)
 
 	err := mailer.DialAndSend(m)
-
+	redisc.AddMessage(message)
 	logger.Infof("hashid: %d: subject: %s, tos: %v, error: %v", message.Event.HashId, subject, message.Tos, err)
 	logger.Infof("hashid: %d: endpoint: %s, metric: %s, tags: %s", message.Event.HashId, message.ReadableEndpoint, strings.Join(message.Metrics, ","), message.ReadableTags)
 }
