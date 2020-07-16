@@ -49,6 +49,12 @@ func AddMessage(message *dataobj.Message) (string,error) {
 	var lst []*dataobj.Message
 	rc := RedisConnPool.Get()
 	defer rc.Close()
+	//删除
+	del,err := redis.Bool(rc.Do("DEL","alarm-message"))
+	if err != nil {
+		logger.Errorf("delete message failed, err: %v, redis reply: %v", err, del)
+		return "", err
+	}
 	reply, err := redis.String(rc.Do("GET", "alarm-message"))
 	if err != nil {
 		if err != redis.ErrNil {
